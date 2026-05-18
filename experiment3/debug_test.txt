@@ -1,0 +1,22 @@
+help
+mkdir testdir
+cd testdir
+ls
+create test1.txt
+open test1.txt
+write 0
+0
+This is test file 1.
+.
+close 0
+open test1.txt
+read 0 50
+close 0
+ls
+rm test1.txt
+ls
+cd ..
+rmdir testdir
+ls
+exit
+y

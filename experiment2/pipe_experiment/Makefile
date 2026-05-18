@@ -6,7 +6,7 @@ TARGET = pipe_experiment
 all: $(TARGET)
 
 $(TARGET): pipe_experiment.c
-	$(CC) $(CFLAGS) -o $(TARGET) pipe_eximent.c $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $(TARGET) pipe_experiment.c $(LDFLAGS)
 
 clean:
 	rm -f $(TARGET) *.o

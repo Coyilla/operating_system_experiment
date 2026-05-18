@@ -10,12 +10,12 @@
 #define MAX_CMD_LENGTH 1024
 #define MAX_ARGS 64
 
-// 历史记录功能
+
 #define MAX_HISTORY 20
 char *history[MAX_HISTORY];
 int history_count = 0;
 
-// 支持的内部命令列表
+
 const char *supported_commands[] = {
     "cmd1",     // 显示时间
     "cmd2",     // 计算器
@@ -28,7 +28,7 @@ const char *supported_commands[] = {
     NULL
 };
 
-// 函数声明
+
 void print_welcome();
 int is_supported_command(const char *cmd);
 int parse_command(char *cmd_line, char **args);
@@ -38,7 +38,7 @@ void show_help();
 void add_to_history(const char *cmd);
 void show_history();
 
-// 检查命令是否支持
+
 int is_supported_command(const char *cmd) {
     for (int i = 0; supported_commands[i] != NULL; i++) {
         if (strcmp(cmd, supported_commands[i]) == 0) {
@@ -49,7 +49,7 @@ int is_supported_command(const char *cmd) {
     return 0;
 }
 
-// 打印欢迎信息
+
 void print_welcome() {
     printf("欢迎使用模拟Shell程序\n");
     printf("支持的命令:\n");
@@ -65,7 +65,7 @@ void print_welcome() {
     printf("\n");
 }
 
-// 解析命令行为参数数组
+
 int parse_command(char *cmd_line, char **args) {
     int i = 0;
     char *token = strtok(cmd_line, " \t\n");
@@ -74,12 +74,12 @@ int parse_command(char *cmd_line, char **args) {
         args[i++] = token;
         token = strtok(NULL, " \t\n");
     }
-    args[i] = NULL;  // 参数列表以NULL结束
+    args[i] = NULL; 
     
-    return i;  // 返回参数个数
+    return i; 
 }
 
-// 执行外部命令
+
 void execute_external_command(char **args) {
     pid_t pid = fork();
     
@@ -88,16 +88,16 @@ void execute_external_command(char **args) {
         return;
     }
     
-    if (pid == 0) {  // 子进程
-        // 尝试执行命令
+    if (pid == 0) { 
+
         execvp(args[0], args);
         
-        // 如果execvp返回，说明执行失败
+
         fprintf(stderr, "错误: 无法执行命令 '%s'\n", args[0]);
         exit(1);
-    } else {  // 父进程
+    } else { 
         int status;
-        waitpid(pid, &status, 0);  // 等待子进程结束
+        waitpid(pid, &status, 0); 
         
         if (WIFEXITED(status)) {
             printf("命令执行完毕，返回值: %d\n", WEXITSTATUS(status));
@@ -107,7 +107,7 @@ void execute_external_command(char **args) {
     }
 }
 
-// 执行内部命令
+
 void execute_internal_command(char **args) {
     if (strcmp(args[0], "cmd1") == 0) {
         char *cmd_args[] = {"./cmd1", NULL};
@@ -118,7 +118,7 @@ void execute_internal_command(char **args) {
         execute_external_command(cmd_args);
     } 
     else if (strcmp(args[0], "cmd3") == 0) {
-        // cmd3 需要参数
+
         char *cmd_args[MAX_ARGS];
         cmd_args[0] = "./cmd3";
         for (int i = 1; args[i] != NULL; i++) {
@@ -134,12 +134,12 @@ void execute_internal_command(char **args) {
     	show_history();
     }
     else {
-        // 系统命令
+
         execute_external_command(args);
     }
 }
 
-// 添加帮助命令处理
+
 void show_help() {
     printf("模拟Shell 帮助\n");
     printf("内部命令:\n");
@@ -154,10 +154,10 @@ void show_help() {
     printf("  ls       - 列出目录内容\n");
     printf("  pwd      - 显示当前目录\n");
     printf("  date     - 显示系统时间\n");
-    printf("  其他系统命令也支持\n");
+
 }
 
-// 历史记录功能
+
 
 void add_to_history(const char *cmd) {
     if (history_count < MAX_HISTORY) {
@@ -177,7 +177,7 @@ void show_history() {
     }
 }
 
-// 主程序
+
 int main() {
     char cmd_line[MAX_CMD_LENGTH];
     char *args[MAX_ARGS];
@@ -185,37 +185,37 @@ int main() {
     print_welcome();
     
     while (1) {
-        // 显示提示符
+
         printf("myshell> ");
         fflush(stdout);
         
-        // 读取命令
+
         if (fgets(cmd_line, MAX_CMD_LENGTH, stdin) == NULL) {
             printf("\n");
             break;
         }
         
-        // 移除换行符
+
         cmd_line[strcspn(cmd_line, "\n")] = '\0';
         
-        // 跳过空行
+
         if (cmd_line[0] == '\0') {
             continue;
         }
         
-        // 解析命令
+
         int arg_count = parse_command(cmd_line, args);
         if (arg_count == 0) {
             continue;
         }
         
-        // 检查退出命令
+
         if (strcmp(args[0], "exit") == 0) {
             printf("正在退出模拟Shell...\n");
             break;
         }
         
-        // 检查是否为支持的命令
+
         if (is_supported_command(args[0])) {
             execute_internal_command(args);
         } else {
